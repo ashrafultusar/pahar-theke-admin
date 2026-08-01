@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useId } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
@@ -15,6 +15,7 @@ interface Props {
 export default function ImageUploader({ currentUrl, onUpload, accept = "image/*", label = "Upload" }: Props) {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const uid = useId();
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,7 +56,7 @@ export default function ImageUploader({ currentUrl, onUpload, accept = "image/*"
         accept={accept}
         onChange={handleFile}
         className="hidden"
-        id="file-upload"
+        id={uid}
       />
       <button
         type="button"

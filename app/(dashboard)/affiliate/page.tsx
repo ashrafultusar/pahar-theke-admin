@@ -43,10 +43,10 @@ export default function AffiliatePage() {
           try {
             const parsed = JSON.parse(s.content);
             setData(parsed);
-          } catch {}
+          } catch { }
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 

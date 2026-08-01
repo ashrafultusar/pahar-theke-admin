@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ArrowLeft, Plus, Trash2, Star } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { ArrowLeft, Plus, Trash2, Star, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
 import SaveButton, { useSaveToast } from "@/components/SaveButton";
 import { getSectionByType, upsertSection } from "@/lib/api";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 interface Review {
   id: number;
@@ -22,6 +24,82 @@ const DEFAULT_REVIEWS: Review[] = [
   { id: 4, name: "Mehedi Rahman", role: "Happy Customer", image: "https://i.pravatar.cc/100?img=15", rating: 5, review: "One of the best online meat delivery experiences I have had. Great value, clean cuts, and very professional handling." },
   { id: 5, name: "Farzana Islam", role: "Verified Customer", image: "https://i.pravatar.cc/100?img=25", rating: 5, review: "Fresh products, secure packaging, and on-time delivery. The whole experience felt reliable and premium from start to finish." },
 ];
+
+function AvatarUploader({ currentUrl, onUpload }: { currentUrl: string; onUpload: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const token = localStorage.getItem("admin_token");
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`${API_URL}/upload`, {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success) {
+        onUpload(json.data.url);
+      } else {
+        alert(json.message || "Upload failed");
+      }
+    } catch {
+      alert("Upload failed. Is the backend running?");
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      {currentUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={currentUrl}
+          alt="avatar"
+          className="h-14 w-14 rounded-full object-cover ring-2 ring-[#fdc700]/30"
+        />
+      ) : (
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+          <Upload className="h-5 w-5" />
+        </div>
+      )}
+      <div className="flex flex-col gap-1">
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFile}
+          className="hidden"
+        />
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+          className="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+        >
+          {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+          {uploading ? "Uploading..." : currentUrl ? "Change Photo" : "Upload Photo"}
+        </button>
+        {currentUrl && (
+          <button
+            type="button"
+            onClick={() => onUpload("")}
+            className="text-[10px] text-red-400 hover:text-red-600 text-left"
+          >
+            Remove
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>(DEFAULT_REVIEWS);
@@ -44,7 +122,7 @@ export default function ReviewsPage() {
           );
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
@@ -77,15 +155,31 @@ export default function ReviewsPage() {
         id: Date.now(),
         name: "New Customer",
         role: "Verified Customer",
-        image: "https://i.pravatar.cc/100",
+        image: "",
         rating: 5,
         review: "",
       },
     ]);
   };
 
-  const removeReview = (id: number) => {
-    setReviews((r) => r.filter((rev) => rev.id !== id));
+  const removeReview = async (id: number) => {
+    const updated = reviews.filter((rev) => rev.id !== id);
+    setReviews(updated);
+    try {
+      await upsertSection("home", "testimonials", {
+        title: "Customer Reviews",
+        testimonials: updated.map((r) => ({
+          name: r.name,
+          position: r.role,
+          avatar: r.image,
+          rating: r.rating,
+          content: r.review,
+        })),
+      });
+      showToast("success", "Review deleted!");
+    } catch {
+      showToast("error", "Failed to delete. Check backend connection.");
+    }
   };
 
   if (loading)
@@ -133,20 +227,6 @@ export default function ReviewsPage() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="relative">
-                  {rev.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={rev.image}
-                      alt={rev.name}
-                      className="h-12 w-12 rounded-full object-cover ring-2 ring-[#fdc700]/30"
-                    />
-                  ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 text-lg font-bold text-gray-400">
-                      {rev.name.charAt(0)}
-                    </div>
-                  )}
-                </div>
                 <div>
                   <p className="text-sm font-semibold text-[#1a1a2e]">{rev.name || "—"}</p>
                   <p className="text-xs text-gray-400">{rev.role}</p>
@@ -158,11 +238,10 @@ export default function ReviewsPage() {
                         className="p-0"
                       >
                         <Star
-                          className={`h-3.5 w-3.5 ${
-                            star <= rev.rating
-                              ? "fill-[#fdc700] text-[#fdc700]"
-                              : "text-gray-200"
-                          }`}
+                          className={`h-3.5 w-3.5 ${star <= rev.rating
+                            ? "fill-[#fdc700] text-[#fdc700]"
+                            : "text-gray-200"
+                            }`}
                         />
                       </button>
                     ))}
@@ -178,6 +257,14 @@ export default function ReviewsPage() {
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
+            </div>
+
+            <div className="mb-3">
+              <label className="block text-xs font-medium text-gray-500 mb-2">Avatar Photo</label>
+              <AvatarUploader
+                currentUrl={rev.image}
+                onUpload={(url) => updateReview(rev.id, "image", url)}
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-3">
@@ -200,17 +287,6 @@ export default function ReviewsPage() {
                   placeholder="e.g. Verified Customer"
                 />
               </div>
-            </div>
-
-            <div className="mb-3">
-              <label className="block text-xs font-medium text-gray-500 mb-1">Avatar Image URL</label>
-              <input
-                type="text"
-                value={rev.image}
-                onChange={(e) => updateReview(rev.id, "image", e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
-                placeholder="https://i.pravatar.cc/100?img=1"
-              />
             </div>
 
             <div>

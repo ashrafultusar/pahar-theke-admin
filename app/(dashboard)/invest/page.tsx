@@ -40,10 +40,10 @@ export default function InvestPage() {
     getSectionByType("home", "newsletter")
       .then((s) => {
         if (s?.content) {
-          try { setData(JSON.parse(s.content)); } catch {}
+          try { setData(JSON.parse(s.content)); } catch { }
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
