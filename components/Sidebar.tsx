@@ -10,12 +10,13 @@ import {
   Info,
   Star,
   Footprints,
+  ShoppingBag,
   ChevronRight,
   Mountain,
   LogOut,
 } from "lucide-react";
 
-const navItems = [
+const contentItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/hero", label: "Hero Section", icon: Image },
   { href: "/affiliate", label: "Affiliate Banner", icon: BadgeDollarSign },
@@ -23,6 +24,10 @@ const navItems = [
   { href: "/about", label: "About Section", icon: Info },
   { href: "/reviews", label: "Customer Reviews", icon: Star },
   { href: "/footer", label: "Footer", icon: Footprints },
+];
+
+const storeItems = [
+  { href: "/orders", label: "Orders", icon: ShoppingBag },
 ];
 
 export default function Sidebar() {
@@ -49,20 +54,19 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-3">
-        <p className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/30">
-          Content Manager
+      <p className="px-3 mt-5 mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/30">
+          Store
         </p>
-        {navItems.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href;
+        {storeItems.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
               key={href}
               href={href}
-              className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 mb-1 text-sm font-medium transition-all ${
-                active
+              className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 mb-1 text-sm font-medium transition-all ${active
                   ? "bg-[#fdc700] text-[#1a1a2e]"
                   : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`}
+                }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
               <span className="flex-1">{label}</span>
@@ -70,6 +74,28 @@ export default function Sidebar() {
             </Link>
           );
         })}
+        <p className="px-3 mt-6 mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/30">
+          Content Manager
+        </p>
+        {contentItems.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 mb-1 text-sm font-medium transition-all ${active
+                  ? "bg-[#fdc700] text-[#1a1a2e]"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              <span className="flex-1">{label}</span>
+              {active && <ChevronRight className="h-3.5 w-3.5 shrink-0" />}
+            </Link>
+          );
+        })}
+
+       
       </nav>
 
       <div className="px-3 py-3 border-t border-white/10">

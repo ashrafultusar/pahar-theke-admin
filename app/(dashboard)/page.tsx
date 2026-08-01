@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Globe,
   Footprints,
+  ShoppingBag,
 } from "lucide-react";
 
 const sections = [
@@ -52,6 +53,13 @@ const sections = [
     description: "Manage footer content — links, social media, contact info.",
     icon: Footprints,
     color: "bg-teal-500",
+  },
+  {
+    href: "/orders",
+    label: "Orders",
+    description: "View and manage customer orders placed from the checkout page.",
+    icon: ShoppingBag,
+    color: "bg-rose-500",
   },
 ];
 
@@ -104,7 +112,7 @@ export default function DashboardPage() {
 
       {/* Info box */}
       <div className="mt-10 rounded-xl border border-blue-100 bg-blue-50 px-5 py-4 text-sm text-blue-700">
-        <strong>Note:</strong> Products, categories, and orders are managed directly via the external API (pahartheke.com) and are not editable here.
+        <strong>Note:</strong> Products and categories are managed directly via the external API (pahartheke.com). Orders placed on the storefront are saved and viewable here.
       </div>
     </div>
   );
