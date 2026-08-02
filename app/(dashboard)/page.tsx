@@ -9,6 +9,7 @@ import {
   Globe,
   Footprints,
   ShoppingBag,
+  Truck,
 } from "lucide-react";
 
 const sections = [
@@ -60,6 +61,13 @@ const sections = [
     description: "View and manage customer orders placed from the checkout page.",
     icon: ShoppingBag,
     color: "bg-rose-500",
+  },
+  {
+    href: "/delivery",
+    label: "Delivery Charges",
+    description: "Set delivery zone names and prices shown on the checkout page.",
+    icon: Truck,
+    color: "bg-cyan-500",
   },
 ];
 

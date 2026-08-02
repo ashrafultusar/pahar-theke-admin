@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Mountain,
   LogOut,
+  Bus,
 } from "lucide-react";
 
 const contentItems = [
@@ -23,6 +24,7 @@ const contentItems = [
   { href: "/invest", label: "Invest Banner", icon: TrendingUp },
   { href: "/about", label: "About Section", icon: Info },
   { href: "/reviews", label: "Customer Reviews", icon: Star },
+  { href: "/delivery", label: "Delivery", icon: Bus },
   { href: "/footer", label: "Footer", icon: Footprints },
 ];
 
