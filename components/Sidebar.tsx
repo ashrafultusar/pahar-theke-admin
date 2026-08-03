@@ -15,11 +15,13 @@ import {
   Mountain,
   LogOut,
   Bus,
+  CarTaxiFront,
 } from "lucide-react";
 
 const contentItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/hero", label: "Hero Section", icon: Image },
+  { href: "/product-sections", label: "Product Sections", icon: CarTaxiFront },
   { href: "/affiliate", label: "Affiliate Banner", icon: BadgeDollarSign },
   { href: "/invest", label: "Invest Banner", icon: TrendingUp },
   { href: "/about", label: "About Section", icon: Info },

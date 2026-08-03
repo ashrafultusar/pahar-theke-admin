@@ -10,6 +10,7 @@ import {
   Footprints,
   ShoppingBag,
   Truck,
+  LayoutGrid,
 } from "lucide-react";
 
 const sections = [
@@ -54,6 +55,13 @@ const sections = [
     description: "Manage footer content — links, social media, contact info.",
     icon: Footprints,
     color: "bg-teal-500",
+  },
+  {
+    href: "/product-sections",
+    label: "Product Sections",
+    description: "Edit the title and subtitle of Featured Products, Best Sellers, and Popular Items sections.",
+    icon: LayoutGrid,
+    color: "bg-indigo-500",
   },
   {
     href: "/orders",
