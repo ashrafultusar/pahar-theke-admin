@@ -24,6 +24,9 @@ interface OrderItem {
     quantity: number;
     price: number;
     total: number;
+    variantId?: string;
+    variantName?: string;
+    sku?: string;
 }
 
 interface Order {
@@ -251,7 +254,21 @@ export default function OrderDetailPage() {
                                     )}
                                     <div className="flex-1 min-w-0">
                                         <p className="text-[13px] font-semibold text-[#1a1a2e] truncate">{item.productName}</p>
-                                        <p className="text-xs text-gray-400 mt-0.5">
+                                        {(item.variantName || item.sku || item.variantId) && (
+                                            <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
+                                                {item.variantName && (
+                                                    <span className="inline-flex items-center rounded bg-amber-50 px-1.5 py-0.5 font-medium text-amber-800 ring-1 ring-inset ring-amber-600/20">
+                                                        Variant: {item.variantName}
+                                                    </span>
+                                                )}
+                                                {item.sku && (
+                                                    <span className="inline-flex items-center rounded bg-gray-50 px-1.5 py-0.5 font-mono text-[11px] text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                                                        SKU: {item.sku}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
+                                        <p className="text-xs text-gray-400 mt-1">
                                             {formatTaka(item.price)} × {item.quantity}
                                         </p>
                                     </div>
