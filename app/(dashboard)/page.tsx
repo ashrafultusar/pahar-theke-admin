@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Globe,
   Footprints,
-  ShoppingBag,
   Truck,
   LayoutGrid,
 } from "lucide-react";
@@ -64,13 +63,6 @@ const sections = [
     color: "bg-indigo-500",
   },
   {
-    href: "/orders",
-    label: "Orders",
-    description: "View and manage customer orders placed from the checkout page.",
-    icon: ShoppingBag,
-    color: "bg-rose-500",
-  },
-  {
     href: "/delivery",
     label: "Delivery Charges",
     description: "Set delivery zone names and prices shown on the checkout page.",
@@ -111,7 +103,7 @@ export default function DashboardPage() {
             className="group flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md hover:border-[#fdc700]"
           >
             <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${color}`}>
-              <Icon className="h-5 w-5 text-white" />
+              <Icon className="h-5 w-5 text-[#ffffff]" />
             </div>
             <div>
               <h2 className="text-base font-semibold text-[#1a1a2e] group-hover:text-[#c49f00]">
@@ -128,7 +120,7 @@ export default function DashboardPage() {
 
       {/* Info box */}
       <div className="mt-10 rounded-xl border border-blue-100 bg-blue-50 px-5 py-4 text-sm text-blue-700">
-        <strong>Note:</strong> Products and categories are managed directly via the external API (pahartheke.com). Orders placed on the storefront are saved and viewable here.
+        <strong>Note:</strong> Products and categories are managed directly via the external API (pahartheke.com).
       </div>
     </div>
   );

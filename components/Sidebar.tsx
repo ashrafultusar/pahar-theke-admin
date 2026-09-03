@@ -10,7 +10,6 @@ import {
   Info,
   Star,
   Footprints,
-  ShoppingBag,
   ChevronRight,
   Mountain,
   LogOut,
@@ -28,10 +27,6 @@ const contentItems = [
   { href: "/reviews", label: "Customer Reviews", icon: Star },
   { href: "/delivery", label: "Delivery", icon: Bus },
   { href: "/footer", label: "Footer", icon: Footprints },
-];
-
-const storeItems = [
-  { href: "/orders", label: "Orders", icon: ShoppingBag },
 ];
 
 export default function Sidebar() {
@@ -58,27 +53,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-3">
-      <p className="px-3 mt-5 mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/30">
-          Store
-        </p>
-        {storeItems.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || pathname.startsWith(href + "/");
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 mb-1 text-sm font-medium transition-all ${active
-                  ? "bg-[#fdc700] text-[#1a1a2e]"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-                }`}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span className="flex-1">{label}</span>
-              {active && <ChevronRight className="h-3.5 w-3.5 shrink-0" />}
-            </Link>
-          );
-        })}
-        <p className="px-3 mt-6 mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/30">
+        <p className="px-3 mt-5 mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/30">
           Content Manager
         </p>
         {contentItems.map(({ href, label, icon: Icon }) => {
@@ -88,8 +63,8 @@ export default function Sidebar() {
               key={href}
               href={href}
               className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 mb-1 text-sm font-medium transition-all ${active
-                  ? "bg-[#fdc700] text-[#1a1a2e]"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                ? "bg-[#fdc700] text-[#1a1a2e]"
+                : "text-white/70 hover:bg-white/10 hover:text-white"
                 }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -98,8 +73,6 @@ export default function Sidebar() {
             </Link>
           );
         })}
-
-       
       </nav>
 
       <div className="px-3 py-3 border-t border-white/10">
