@@ -4,9 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { ArrowLeft, Plus, Trash2, GripVertical, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
 import SaveButton, { useSaveToast } from "@/components/SaveButton";
-import { getSectionByType, upsertSection } from "@/lib/api";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { API_BASE, getSectionByType, upsertSection } from "@/lib/api";
 
 interface LinkItem {
   id: number;
@@ -78,7 +76,7 @@ function ImgUploader({
       const token = localStorage.getItem("admin_token");
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch(`${API_URL}/upload`, {
+      const res = await fetch(`${API_BASE}/upload`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: fd,

@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://backend:5000/api";
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;

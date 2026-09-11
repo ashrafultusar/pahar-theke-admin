@@ -12,16 +12,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import SaveButton, { useSaveToast } from "@/components/SaveButton";
-import { getSectionByType, upsertSection } from "@/lib/api";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { API_BASE, getSectionByType, upsertSection } from "@/lib/api";
 
 interface HeroData {
   tagline: string;       // "BANGLADESH'S"  → stored as title
   subheading: string;    // "First & Only"  → stored as subtitle
   mainHeading: string;   // "International Standard Abattoir" → stored as content
   sectionButton: string; // CTA text        → stored as ctaText
+  sectionLink: string;   // CTA link        → stored as ctaLink
   bgVideo: string;       // video URL       → stored as heroImage
 }
 
@@ -30,6 +28,7 @@ const DEFAULT: HeroData = {
   subheading: "First & Only",
   mainHeading: "International Standard Abattoir",
   sectionButton: "Start Shopping Now",
+  sectionLink: "/",
   bgVideo: "/videos/HeroSectionVideo.mp4",
 };
 
@@ -54,7 +53,7 @@ function VideoUploader({
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch(`${API_URL}/upload`, {
+      const res = await fetch(`${API_BASE}/upload`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,
@@ -166,6 +165,7 @@ export default function HeroPage() {
             subheading: s.subtitle || DEFAULT.subheading,
             mainHeading: s.content || DEFAULT.mainHeading,
             sectionButton: s.ctaText || DEFAULT.sectionButton,
+            sectionLink: s.ctaLink || DEFAULT.sectionLink,
             bgVideo: s.heroImage || DEFAULT.bgVideo,
           });
         }
@@ -181,6 +181,7 @@ export default function HeroPage() {
         subtitle: data.subheading,
         content: data.mainHeading,
         ctaText: data.sectionButton,
+        ctaLink: data.sectionLink,
         heroImage: data.bgVideo,
       });
       showToast("success", "Hero section saved successfully!");
@@ -284,6 +285,22 @@ export default function HeroPage() {
             onChange={(e) => set("sectionButton")(e.target.value)}
             className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
             placeholder="e.g. Start Shopping Now"
+          />
+        </FieldCard>
+
+        {/* CTA Button Link */}
+        <FieldCard
+          icon={<MousePointerClick className="h-4 w-4" />}
+          iconColor="text-orange-500"
+          label="CTA Button Link (Path)"
+          hint="Destination URL or path when the button is clicked. Example: / or /products or /about"
+        >
+          <input
+            type="text"
+            value={data.sectionLink}
+            onChange={(e) => set("sectionLink")(e.target.value)}
+            className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
+            placeholder="e.g. / or /products"
           />
         </FieldCard>
 

@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useRef, useId } from "react";
-import { Upload, X, Loader2 } from "lucide-react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { Upload, Loader2 } from "lucide-react";
+import { API_BASE } from "@/lib/api";
 
 interface Props {
   currentUrl: string;
@@ -28,7 +27,7 @@ export default function ImageUploader({ currentUrl, onUpload, accept = "image/*"
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch(`${API_URL}/upload`, {
+      const res = await fetch(`${API_BASE}/upload`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,

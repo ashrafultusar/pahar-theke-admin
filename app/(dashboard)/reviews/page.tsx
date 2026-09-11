@@ -4,9 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { ArrowLeft, Plus, Trash2, Star, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
 import SaveButton, { useSaveToast } from "@/components/SaveButton";
-import { getSectionByType, upsertSection } from "@/lib/api";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { API_BASE, getSectionByType, upsertSection } from "@/lib/api";
 
 interface Review {
   id: number;
@@ -37,7 +35,7 @@ function AvatarUploader({ currentUrl, onUpload }: { currentUrl: string; onUpload
       const token = localStorage.getItem("admin_token");
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch(`${API_URL}/upload`, {
+      const res = await fetch(`${API_BASE}/upload`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,
